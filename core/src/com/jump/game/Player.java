@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 import com.jump.game.Bullet;
 
 
@@ -25,8 +26,10 @@ public class Player {
     private float animationTime = 0;
     private float animationInterval = 0.1f;
     private float width;
+    private float height;
     private float distance = 0;
     private float speed = 100;
+    private int money;
 
 
     public Player() {
@@ -39,6 +42,8 @@ public class Player {
         x = 400;
         y = 200;
         width = 120;
+        height = 160;
+        money = 0;
     }
 
 
@@ -145,12 +150,21 @@ public class Player {
 
         isHit = false;
         distance = 0;
+        money = 0;
 
     }
 
     public float getDistance() {
         return distance;
     }
+    public void addMoney(int amount) {
+        money += amount;
+    }
 
-
+    public int getMoney() {
+        return money;
+    }
+    public Rectangle getBounds() {
+        return new Rectangle(x, y, width, height); // Assurez-vous que width et height sont définis
+    }
 }

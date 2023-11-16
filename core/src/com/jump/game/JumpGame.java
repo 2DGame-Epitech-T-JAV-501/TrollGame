@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class JumpGame extends ApplicationAdapter {
 	SpriteBatch batch;
@@ -24,6 +25,9 @@ public class JumpGame extends ApplicationAdapter {
 	Music backgroundMusic;
 	private Sound shootSound;
 	Music gameOverMusic;
+	private ArrayList<Collectible> collectibles;
+	private float distancePourNouveauCollectible = 10.0f;
+	private float dernierCollectibleGenere = 0.0f;
 
 
 	@Override
@@ -42,6 +46,8 @@ public class JumpGame extends ApplicationAdapter {
 		backgroundMusic.setLooping(true);
 		gameOverMusic = Gdx.audio.newMusic(Gdx.files.internal("gameover_music.mp3"));
 		gameOverMusic.setVolume(0.5f);
+		collectibles = new ArrayList<Collectible>();
+		collectibles.add(new Collectible(new Texture("collectible.png"), 1900, 200,200));
 	}
 
 	@Override
@@ -60,12 +66,43 @@ public class JumpGame extends ApplicationAdapter {
 		scrollingBackground.draw(batch);
 		enemy.draw(batch);
 
+
+
+
+
 		if (!gameOver) {
 			player.update();
 			player.draw(batch);
 			enemy.update(player.getDistance());
 			String distanceText = String.format("Distance: %.2f m", player.getDistance());
 			font.draw(batch, distanceText, Gdx.graphics.getWidth() - 1900, Gdx.graphics.getHeight() - 20);
+			font.draw(batch, "Argent: " + player.getMoney(), 20, Gdx.graphics.getHeight() - 50);
+
+			float distanceParcourue = player.getDistance();
+			if (distanceParcourue - dernierCollectibleGenere >= distancePourNouveauCollectible) {
+				// Générer un nouveau collectible
+				collectibles.add(new Collectible(new Texture("collectible.png"), Gdx.graphics.getWidth(), 200, 100));
+				dernierCollectibleGenere = distanceParcourue;
+			}
+
+			// Mettre à jour et dessiner les collectibles
+			float deltaTime = Gdx.graphics.getDeltaTime();
+			for (Collectible collectible : collectibles) {
+				collectible.update(deltaTime);
+				collectible.draw(batch);
+			}
+
+			Iterator<Collectible> iter = collectibles.iterator();
+			while (iter.hasNext()) {
+				Collectible collectible = iter.next();
+				collectible.draw(batch);
+
+				if (player.getBounds().overlaps(collectible.getBounds())) {
+					iter.remove();
+					player.addMoney(100);
+				}
+			}
+
 
 			if (player.isHitByBullet(enemy.getBullets())) {
 				player.setHit(true);
@@ -88,6 +125,8 @@ public class JumpGame extends ApplicationAdapter {
 	private void resetGame() {
 		player.reset();
 		enemy.reset();
+		collectibles.clear();
+		dernierCollectibleGenere = 0.0f;
 		gameOver = false;
 		gameOverMusic.stop();
 		backgroundMusic.play();
