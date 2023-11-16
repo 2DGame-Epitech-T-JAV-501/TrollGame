@@ -14,9 +14,9 @@ public class Enemy {
     private ArrayList<Bullet> bullets;
     private float timeSinceLastShot = 0;
     private Sound shootSound;
-    private static final float INITIAL_SHOOT_INTERVAL = 1.6f;
-    private static final float INCREASED_SHOOT_INTERVAL = 3.0f;
-    private static final float DISTANCE_THRESHOLD = 100.0f;
+    private static final float INITIAL_SHOOT_INTERVAL = 3.0f;
+    private static final float INCREASED_SHOOT_INTERVAL = 6.0f;
+    private static final float DISTANCE_THRESHOLD = 50.0f;
 
     public Enemy(Sound shootSound) {
         texture = new Texture("1_police_attack_Attack2_000.png");

@@ -39,7 +39,7 @@ public class Player {
         texture4 = new Texture("1_terrorist_1_Run_003.png");
         texture5 = new Texture("1_terrorist_1_Run_004.png");
         texture6 = new Texture("1_terrorist_1_Run_005.png");
-        x = 400;
+        x = 800;
         y = 200;
         width = 120;
         height = 160;
@@ -145,7 +145,7 @@ public class Player {
     }
 
     public void reset() {
-        x = 400;
+        x = 800;
         y = 200;
 
         isHit = false;
