@@ -23,6 +23,7 @@ public class JumpGame extends ApplicationAdapter {
 	private Texture gameOverTexture;
 	Music backgroundMusic;
 	private Sound shootSound;
+	Music gameOverMusic;
 
 
 	@Override
@@ -37,7 +38,10 @@ public class JumpGame extends ApplicationAdapter {
 		gameOverTexture = new Texture("gameover.png");
 		backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("music.mp3"));
 		backgroundMusic.setVolume(0.1f);
+		backgroundMusic.play();
 		backgroundMusic.setLooping(true);
+		gameOverMusic = Gdx.audio.newMusic(Gdx.files.internal("gameover_music.mp3"));
+		gameOverMusic.setVolume(0.5f);
 	}
 
 	@Override
@@ -46,7 +50,7 @@ public class JumpGame extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		if (!gameOver) {
-			// Mise à jour de la map et de l'ennemi seulement si le jeu n'est pas en état de "Game Over"
+
 			scrollingBackground.update();
 			enemy.update();
 		}
@@ -65,14 +69,15 @@ public class JumpGame extends ApplicationAdapter {
 			if (player.isHitByBullet(enemy.getBullets())) {
 				player.setHit(true);
 				gameOver = true;
-				backgroundMusic.stop(); // Arrêter la musique lorsque le jeu est en état de "Game Over"
+				backgroundMusic.stop();
+				gameOverMusic.play();
 			}
 		} else {
 			font.draw(batch, "Appuyer sur R pour Rejouer", (float) Gdx.graphics.getWidth() / 2, (float) Gdx.graphics.getHeight() / 10);
 			batch.draw(gameOverTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
 			if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
-				resetGame(); // Méthode pour réinitialiser le jeu
+				resetGame();
 			}
 		}
 
@@ -83,7 +88,8 @@ public class JumpGame extends ApplicationAdapter {
 		player.reset();
 		enemy.reset();
 		gameOver = false;
-		backgroundMusic.play(); // Redémarrer la musique lorsque le jeu est réinitialisé
+		gameOverMusic.stop();
+		backgroundMusic.play();
 	}
 
 
