@@ -52,7 +52,7 @@ public class JumpGame extends ApplicationAdapter {
 		if (!gameOver) {
 
 			scrollingBackground.update();
-			enemy.update();
+			enemy.update(player.getDistance());
 		}
 
 		batch.begin();
@@ -63,6 +63,7 @@ public class JumpGame extends ApplicationAdapter {
 		if (!gameOver) {
 			player.update();
 			player.draw(batch);
+			enemy.update(player.getDistance());
 			String distanceText = String.format("Distance: %.2f m", player.getDistance());
 			font.draw(batch, distanceText, Gdx.graphics.getWidth() - 1900, Gdx.graphics.getHeight() - 20);
 

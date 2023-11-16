@@ -14,6 +14,9 @@ public class Enemy {
     private ArrayList<Bullet> bullets;
     private float timeSinceLastShot = 0;
     private Sound shootSound;
+    private static final float INITIAL_SHOOT_INTERVAL = 1.6f;
+    private static final float INCREASED_SHOOT_INTERVAL = 3.0f;
+    private static final float DISTANCE_THRESHOLD = 100.0f;
 
     public Enemy(Sound shootSound) {
         texture = new Texture("1_police_attack_Attack2_000.png");
@@ -23,15 +26,16 @@ public class Enemy {
         this.shootSound = shootSound;
     }
 
-    public void update() {
+    public void update(float playerDistance) {
         // Tirer une balle toutes les 2 secondes
+        float shootInterval = playerDistance >= DISTANCE_THRESHOLD ? INCREASED_SHOOT_INTERVAL : INITIAL_SHOOT_INTERVAL;
+
+        // Mise à jour du temps depuis le dernier tir
         timeSinceLastShot += Gdx.graphics.getDeltaTime();
-        if (timeSinceLastShot >= 2) {
+        if (timeSinceLastShot >= shootInterval) {
             bullets.add(new Bullet(x + texture.getWidth(), y + 10));
             timeSinceLastShot = 0;
-
-                shootSound.play(); // Joue le son du tir
-
+            shootSound.play(); // Joue le son du tir
         }
 
         // Mettre à jour les balles

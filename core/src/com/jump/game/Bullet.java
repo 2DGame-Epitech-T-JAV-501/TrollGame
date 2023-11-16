@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Rectangle;
 public class Bullet {
     private Texture texture;
     private float x, y;
-    private float speed = 300; // Vitesse de la balle
+    private float speed = 200; // Vitesse de la balle
 
     public Bullet(float x, float y) {
         texture = new Texture("bullet.png"); // Assurez-vous d'avoir une texture pour la balle
