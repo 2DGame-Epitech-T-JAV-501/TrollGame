@@ -45,49 +45,45 @@ public class JumpGame extends ApplicationAdapter {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		scrollingBackground.update();
+		if (!gameOver) {
+			// Mise à jour de la map et de l'ennemi seulement si le jeu n'est pas en état de "Game Over"
+			scrollingBackground.update();
+			enemy.update();
+		}
 
 		batch.begin();
 
 		scrollingBackground.draw(batch);
-
-		enemy.update();
 		enemy.draw(batch);
 
-		if (!gameOver) { // Vérifiez si le jeu est toujours en cours
+		if (!gameOver) {
 			player.update();
 			player.draw(batch);
+			String distanceText = String.format("Distance: %.2f m", player.getDistance());
+			font.draw(batch, distanceText, Gdx.graphics.getWidth() - 1900, Gdx.graphics.getHeight() - 20);
 
 			if (player.isHitByBullet(enemy.getBullets())) {
-				// Le joueur est touché par une balle, définir l'écran de fin de jeu ici
-				ArrayList<Bullet> enemyBullets = enemy.getBullets();
 				player.setHit(true);
-
-
-				// Arrêtez la mise à jour du jeu
 				gameOver = true;
+				backgroundMusic.stop(); // Arrêter la musique lorsque le jeu est en état de "Game Over"
 			}
 		} else {
-			// Le jeu est en mode "game over"
-			// Affichez l'écran de fin de jeu ici
-			// Par exemple, vous pouvez afficher un message "Game Over" à la place du message précédent
 			font.draw(batch, "Appuyer sur R pour Rejouer", (float) Gdx.graphics.getWidth() / 2, (float) Gdx.graphics.getHeight() / 10);
 			batch.draw(gameOverTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-			// Ajoutez une touche ou un événement pour redémarrer le jeu
 			if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
-				// Réinitialisez les états du jeu pour redémarrer
-				player.reset();
-				enemy.reset();
-				gameOver = false;
+				resetGame(); // Méthode pour réinitialiser le jeu
 			}
-		}
-		if (!backgroundMusic.isPlaying()) {
-			backgroundMusic.play();
-			backgroundMusic.setLooping(true);
 		}
 
 		batch.end();
+	}
+
+	private void resetGame() {
+		player.reset();
+		enemy.reset();
+		gameOver = false;
+		backgroundMusic.play(); // Redémarrer la musique lorsque le jeu est réinitialisé
 	}
 
 

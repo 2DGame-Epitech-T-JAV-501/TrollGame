@@ -27,7 +27,7 @@ public class Enemy {
         // Tirer une balle toutes les 2 secondes
         timeSinceLastShot += Gdx.graphics.getDeltaTime();
         if (timeSinceLastShot >= 2) {
-            bullets.add(new Bullet(x + texture.getWidth(), y + 12));
+            bullets.add(new Bullet(x + texture.getWidth(), y + 10));
             timeSinceLastShot = 0;
 
                 shootSound.play(); // Joue le son du tir
@@ -62,5 +62,6 @@ public class Enemy {
     public void reset() {
         x = 100;
         y = 200;
+        bullets.clear();
     }
 }

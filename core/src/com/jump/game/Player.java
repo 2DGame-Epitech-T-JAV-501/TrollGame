@@ -25,6 +25,8 @@ public class Player {
     private float animationTime = 0;
     private float animationInterval = 0.1f;
     private float width;
+    private float distance = 0;
+    private float speed = 100;
 
 
     public Player() {
@@ -64,6 +66,7 @@ public class Player {
         if (!isJumping) {
             animationTime += Gdx.graphics.getDeltaTime();
         }
+        distance += (speed * Gdx.graphics.getDeltaTime()) / 100.0f;
     }
 
     public void draw(SpriteBatch batch) {
@@ -141,6 +144,13 @@ public class Player {
         y = 200;
 
         isHit = false;
+        distance = 0;
 
     }
+
+    public float getDistance() {
+        return distance;
+    }
+
+
 }
