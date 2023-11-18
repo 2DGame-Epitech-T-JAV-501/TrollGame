@@ -30,6 +30,7 @@ public class Player {
     private float distance = 0;
     private float speed = 100;
     private int money;
+    private String pseudo;
 
 
     public Player() {
@@ -152,6 +153,13 @@ public class Player {
         distance = 0;
         money = 0;
 
+    }
+    public void setPseudo(String pseudo) {
+        this.pseudo = pseudo;
+    }
+
+    public String getPseudo() {
+        return pseudo;
     }
 
     public float getDistance() {

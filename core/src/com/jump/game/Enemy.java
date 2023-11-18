@@ -17,7 +17,7 @@ public class Enemy {
     private float timeSinceLastShot = 0;
     private Sound shootSound;
     private static final float INITIAL_SHOOT_INTERVAL = 3.0f;
-    private static final float INCREASED_SHOOT_INTERVAL = 6.0f;
+    private static final float INCREASED_SHOOT_INTERVAL = 1.0f;
     private static final float DISTANCE_THRESHOLD = 50.0f;
 
     public Enemy(Sound shootSound) {
@@ -37,7 +37,7 @@ public class Enemy {
         timeSinceLastShot += Gdx.graphics.getDeltaTime();
 
         if (timeSinceLastShot >= shootInterval) {
-            int numberOfBullets = random.nextInt(4) + 1; // Générer un nombre aléatoire entre 1 et 3
+            int numberOfBullets = random.nextInt(3) + 1; // Générer un nombre aléatoire entre 1 et 3
             float timeBetweenBullets = 0.1f; // Temps entre chaque balle en secondes
 
             for (int i = 0; i < numberOfBullets; i++) {
