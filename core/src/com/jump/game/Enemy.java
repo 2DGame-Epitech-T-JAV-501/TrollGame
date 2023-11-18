@@ -4,9 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.Timer;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Random;
 
 public class Enemy {
     private Texture texture;
@@ -27,15 +29,29 @@ public class Enemy {
     }
 
     public void update(float playerDistance) {
-        // Tirer une balle toutes les 2 secondes
+        // Tirer des balles à intervalles réguliers
         float shootInterval = playerDistance >= DISTANCE_THRESHOLD ? INCREASED_SHOOT_INTERVAL : INITIAL_SHOOT_INTERVAL;
+        Random random = new Random();
 
         // Mise à jour du temps depuis le dernier tir
         timeSinceLastShot += Gdx.graphics.getDeltaTime();
+
         if (timeSinceLastShot >= shootInterval) {
-            bullets.add(new Bullet(x + texture.getWidth(), y + 10));
+            int numberOfBullets = random.nextInt(4) + 1; // Générer un nombre aléatoire entre 1 et 3
+            float timeBetweenBullets = 0.1f; // Temps entre chaque balle en secondes
+
+            for (int i = 0; i < numberOfBullets; i++) {
+                // Planifier le tir de chaque balle
+                final int bulletIndex = i;
+                Timer.schedule(new Timer.Task(){
+                    @Override
+                    public void run() {
+                        bullets.add(new Bullet(x + texture.getWidth(), y + 10));
+                    }
+                }, timeBetweenBullets * bulletIndex);
+            }
             timeSinceLastShot = 0;
-            shootSound.play(); // Joue le son du tir
+            shootSound.play(); // Jouer le son du tir
         }
 
         // Mettre à jour les balles
@@ -48,6 +64,7 @@ public class Enemy {
             }
         }
     }
+
 
     public void draw(SpriteBatch batch) {
         batch.draw(texture, x, y);
