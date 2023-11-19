@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
@@ -93,6 +94,11 @@ public class JumpGame extends ApplicationAdapter {
 		file.writeString(scoreData, true); // 'true' pour ajouter à la fin du fichier
 	}
 	private void createMenu() {
+		Texture backgroundTexture = new Texture(Gdx.files.internal("BackgroundImage.png"));
+		Image backgroundImage = new Image(backgroundTexture);
+		backgroundImage.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		backgroundImage.setPosition(0, 0);
+		stage.addActor(backgroundImage);
 		// Bouton Jouer existant
 		TextButton playButton = new TextButton("Jouer", new Skin(Gdx.files.internal("uiskin.json")));
 		playButton.setSize(200, 50); // Définissez la taille du bouton
@@ -124,6 +130,11 @@ public class JumpGame extends ApplicationAdapter {
 
 
 	private void createPseudoInputField() {
+		Texture backgroundTexture = new Texture(Gdx.files.internal("BackgroundImage.png"));
+		Image backgroundImage = new Image(backgroundTexture);
+		backgroundImage.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		backgroundImage.setPosition(0, 0);
+		pseudoStage.addActor(backgroundImage);
 		pseudoInputField = new TextField("", new Skin(Gdx.files.internal("uiskin.json")));
 		pseudoInputField.setMessageText("Enter Pseudo");
 		pseudoInputField.setSize(200, 50);
