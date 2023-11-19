@@ -251,11 +251,16 @@ public class JumpGame extends ApplicationAdapter {
 		} else {
 			batch.draw(gameOverTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		}
-		font.draw(batch, "Appuyer sur R pour Rejouer", Gdx.graphics.getWidth() / 2.2f, Gdx.graphics.getHeight() / 1.1f);
+		font.draw(batch, "Appuyer sur R pour Rejouer", Gdx.graphics.getWidth() / 2.2f, Gdx.graphics.getHeight() / 1.1f);;
 		GlyphLayout layout = new GlyphLayout();
 		layout.setText(font, "Appuyer sur S pour Menu");
 		float x = (Gdx.graphics.getWidth() - layout.width) / 2;
 		font.draw(batch, "Appuyer sur S pour Menu", x, Gdx.graphics.getHeight() / 1.2f);
+
+		GlyphLayout layout1 = new GlyphLayout();
+		layout.setText(font, "Appuyer sur C pour voir le Classement");
+		float x1 = (float) ((Gdx.graphics.getWidth() - layout1.width) / 2.3);
+		font.draw(batch, "Appuyer sur C pour voir le Classement", x1, Gdx.graphics.getHeight() / 1.3f);
 
 
 		if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
@@ -263,6 +268,10 @@ public class JumpGame extends ApplicationAdapter {
 		}
 		if (Gdx.input.isKeyJustPressed(Input.Keys.S)) { // Pressez M pour revenir au menu
 			currentState = GameState.MENU;
+			resetGame();
+		}
+		if (Gdx.input.isKeyJustPressed(Input.Keys.C)) { // Pressez M pour revenir au menu
+			currentState = GameState.LEADERBOARD;
 		}
 	}
 
