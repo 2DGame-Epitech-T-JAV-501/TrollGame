@@ -283,7 +283,7 @@ public class JumpGame extends ApplicationAdapter {
 
 		String distanceText = String.format("Distance: %.2f m", player.getDistance());
 		font.draw(batch, distanceText, Gdx.graphics.getWidth() - 1900, Gdx.graphics.getHeight() - 20);
-		font.draw(batch, "Argent: " + player.getMoney(), 20, Gdx.graphics.getHeight() - 50);
+		font.draw(batch, "Argent: " + player.getMoney() + " /1000", 20, Gdx.graphics.getHeight() - 50);
 
 		handleCollectibles();
 
