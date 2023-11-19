@@ -8,6 +8,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -232,10 +233,19 @@ public class JumpGame extends ApplicationAdapter {
 		} else {
 			batch.draw(gameOverTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		}
-		font.draw(batch, "Appuyer sur R pour Rejouer", (float) ((float) Gdx.graphics.getWidth() / 2.2), (float) ((float) Gdx.graphics.getHeight()/1.1));
+		font.draw(batch, "Appuyer sur R pour Rejouer", Gdx.graphics.getWidth() / 2.2f, Gdx.graphics.getHeight() / 1.1f);
+		GlyphLayout layout = new GlyphLayout();
+		layout.setText(font, "Appuyer sur S pour Menu");
+		float x = (Gdx.graphics.getWidth() - layout.width) / 2;
+		font.draw(batch, "Appuyer sur S pour Menu", x, Gdx.graphics.getHeight() / 1.2f);
+
 
 		if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
 			resetGame();
+		}
+		if (Gdx.input.isKeyJustPressed(Input.Keys.S)) { // Pressez M pour revenir au menu
+			Gdx.app.log("DEBUG", "handleEndGameScreen() appelée");
+			currentState = GameState.MENU;
 		}
 	}
 
@@ -254,6 +264,7 @@ public class JumpGame extends ApplicationAdapter {
 		if (player.isHitByBullet(enemy.getBullets())) {
 			handleGameOver();
 		}
+
 	}
 
 
