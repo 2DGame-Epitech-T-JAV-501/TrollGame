@@ -33,6 +33,7 @@ public class LeaderboardScreen {
             font.draw(batch, text, x, y);
             y -= 30; // Décale chaque ligne vers le bas
         }
+
         batch.end();
     }
 

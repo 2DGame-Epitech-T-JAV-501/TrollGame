@@ -37,7 +37,7 @@ public class JumpGame extends ApplicationAdapter {
 	private float distancePourNouveauCollectible = 10.0f;
 	private float dernierCollectibleGenere = 0.0f;
 	private int collectedItems = 0;
-	private final int WINNING_COLLECTIBLE_COUNT = 1;
+	private final int WINNING_COLLECTIBLE_COUNT = 10;
 	private boolean playerWon = false;
 	private Stage stage;
 	private boolean inMenu = true;
@@ -140,6 +140,23 @@ public class JumpGame extends ApplicationAdapter {
 		return false;
 	}
 
+	private void createLeaderboardScreen() {
+		// Créez le bouton "Retour au Menu"
+		TextButton backButton = new TextButton("Retour au Menu", new Skin(Gdx.files.internal("uiskin.json")));
+		backButton.setSize(200, 50);
+		float xBack = (Gdx.graphics.getWidth() - backButton.getWidth()) / 2;
+		float yBack = 50; // Positionnez le bouton en haut de l'écran
+		backButton.setPosition(xBack, yBack);
+		backButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				currentState = GameState.MENU; // Revenir à l'écran de menu
+			}
+		});
+		stage.addActor(backButton);
+	}
+
+
 	@Override
 	public void render() {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -168,6 +185,7 @@ public class JumpGame extends ApplicationAdapter {
 			case LEADERBOARD:
 				if (leaderboardScreen == null) {
 					leaderboardScreen = new LeaderboardScreen();
+					createLeaderboardScreen();
 				}
 				leaderboardScreen.render(Gdx.graphics.getDeltaTime());
 				break;
@@ -244,7 +262,6 @@ public class JumpGame extends ApplicationAdapter {
 			resetGame();
 		}
 		if (Gdx.input.isKeyJustPressed(Input.Keys.S)) { // Pressez M pour revenir au menu
-			Gdx.app.log("DEBUG", "handleEndGameScreen() appelée");
 			currentState = GameState.MENU;
 		}
 	}
