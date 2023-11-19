@@ -5,9 +5,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -16,7 +16,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -44,11 +43,16 @@ public class JumpGame extends ApplicationAdapter {
 	enum GameState {
 		MENU,
 		ENTER_PSEUDO,
-		PLAYING
+		PLAYING,
+		LEADERBOARD
 	}
 
 	private GameState currentState = GameState.MENU;
 	private TextField pseudoInputField;
+	private LeaderboardScreen leaderboardScreen;
+	private ArrayList<PlayerScore> playerScores;
+	private Stage pseudoStage;
+	private String playerPseudo;
 
 
 	@Override
@@ -56,6 +60,7 @@ public class JumpGame extends ApplicationAdapter {
 		stage = new Stage();
 		Gdx.input.setInputProcessor(stage);
 		createMenu();
+		pseudoStage = new Stage();
 		createPseudoInputField();
 		batch = new SpriteBatch();
 		player = new Player();
@@ -74,13 +79,25 @@ public class JumpGame extends ApplicationAdapter {
 		gameOverMusic.setVolume(0.5f);
 		collectibles = new ArrayList<Collectible>();
 		collectibles.add(new Collectible(new Texture("collectible.png"), 1900, 200,200));
+		playerScores = new ArrayList<>();
+	}
+	public void addPlayerScore(String pseudo, float distance, int money) {
+		playerScores.add(new PlayerScore(pseudo, distance, money));
+	}
+	public void savePlayerScore(PlayerScore score) {
+		FileHandle file = Gdx.files.local("scores.txt");
+		String scoreData = score.getPseudo() + "," + score.getDistance() + "," + score.getMoney() + "\n";
+
+		// Écriture des données dans le fichier
+		file.writeString(scoreData, true); // 'true' pour ajouter à la fin du fichier
 	}
 	private void createMenu() {
+		// Bouton Jouer existant
 		TextButton playButton = new TextButton("Jouer", new Skin(Gdx.files.internal("uiskin.json")));
 		playButton.setSize(200, 50); // Définissez la taille du bouton
-		float x = (Gdx.graphics.getWidth() - playButton.getWidth()) / 2;
-		float y = (Gdx.graphics.getHeight() - playButton.getHeight()) / 2;
-		playButton.setPosition(x, y);
+		float xPlay = (Gdx.graphics.getWidth() - playButton.getWidth()) / 2;
+		float yPlay = (Gdx.graphics.getHeight() - playButton.getHeight()) / 2 + 100; // légèrement ajusté
+		playButton.setPosition(xPlay, yPlay);
 		playButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
@@ -88,20 +105,38 @@ public class JumpGame extends ApplicationAdapter {
 			}
 		});
 		stage.addActor(playButton);
+
+		// Nouveau Bouton Classement
+		TextButton leaderboardButton = new TextButton("Classement", new Skin(Gdx.files.internal("uiskin.json")));
+		leaderboardButton.setSize(200, 50);
+		float xLeaderboard = (Gdx.graphics.getWidth() - leaderboardButton.getWidth()) / 2;
+		float yLeaderboard = yPlay - 70; // Positionné en dessous du bouton Jouer
+		leaderboardButton.setPosition(xLeaderboard, yLeaderboard);
+		leaderboardButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				currentState = GameState.LEADERBOARD;
+			}
+		});
+		stage.addActor(leaderboardButton);
 	}
+
 
 	private void createPseudoInputField() {
 		pseudoInputField = new TextField("", new Skin(Gdx.files.internal("uiskin.json")));
 		pseudoInputField.setMessageText("Enter Pseudo");
-		pseudoInputField.setSize(200, 50); // Définissez la taille du champ de texte
+		pseudoInputField.setSize(200, 50);
 		float x = (Gdx.graphics.getWidth() - pseudoInputField.getWidth()) / 2;
 		float y = (Gdx.graphics.getHeight() - pseudoInputField.getHeight()) / 2;
 		pseudoInputField.setPosition(x, y);
-		pseudoInputField.setVisible(false); // Invisible jusqu'à ce que le joueur appuie sur "Jouer"
-		stage.addActor(pseudoInputField);
+		pseudoStage.addActor(pseudoInputField);
 	}
 	private boolean pseudoEntered() {
-		return Gdx.input.isKeyJustPressed(Input.Keys.ENTER) && !pseudoInputField.getText().isEmpty();
+		if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) && !pseudoInputField.getText().isEmpty()) {
+			playerPseudo = pseudoInputField.getText(); // Stocker le pseudo saisi
+			return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -117,17 +152,26 @@ public class JumpGame extends ApplicationAdapter {
 				break;
 
 			case ENTER_PSEUDO:
-				// Gérer la saisie du pseudo
+				Gdx.input.setInputProcessor(pseudoStage);
 				pseudoInputField.setVisible(true);
-				stage.act(Gdx.graphics.getDeltaTime());
-				stage.draw();
+				pseudoStage.act(Gdx.graphics.getDeltaTime());
+				pseudoStage.draw();
 
 				if (pseudoEntered()) {
-					// Une fois le pseudo saisi, passer à l'état de jeu
 					currentState = GameState.PLAYING;
 					pseudoInputField.setVisible(false);
+					Gdx.input.setInputProcessor(stage); // Retour au stage principal pour l'état PLAYING
 				}
 				break;
+
+			case LEADERBOARD:
+				if (leaderboardScreen == null) {
+					leaderboardScreen = new LeaderboardScreen();
+				}
+				leaderboardScreen.render(Gdx.graphics.getDeltaTime());
+				break;
+
+
 
 			case PLAYING:
 				// Gérer la logique du jeu
@@ -178,6 +222,8 @@ public class JumpGame extends ApplicationAdapter {
 		playerWon = false;
 		backgroundMusic.stop();
 		gameOverMusic.play();
+		PlayerScore score = new PlayerScore(playerPseudo, player.getDistance(), player.getMoney());
+		savePlayerScore(score);
 	}
 
 	private void handleEndGameScreen() {

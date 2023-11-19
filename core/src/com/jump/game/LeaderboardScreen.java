@@ -1,81 +1,44 @@
 package com.jump.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public class LeaderboardScreen implements Screen {
-    private Stage stage;
-    private TextButton backButton;
+import java.util.List;
+
+public class LeaderboardScreen {
+    private List<PlayerScore> scores;
+    private BitmapFont font;
+    private SpriteBatch batch;
+    private GlyphLayout layout = new GlyphLayout();
 
     public LeaderboardScreen() {
-        stage = new Stage();
-        Gdx.input.setInputProcessor(stage);
-
-        // Initialisation de la liste des scores ou récupération depuis une source de données
-        // Créez et affichez la liste des scores ici
-
-        // Bouton pour revenir au menu principal
-        backButton = new TextButton("Retour", new Skin(Gdx.files.internal("uiskin.json")));
-        backButton.setSize(200, 50);
-        backButton.setPosition(10, Gdx.graphics.getHeight() - 60);
-        backButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                // Revenez au menu principal lorsque le bouton "Retour" est cliqué
-                dispose();
-                // Ajoutez ici la logique pour revenir au menu principal
-            }
-        });
-        stage.addActor(backButton);
+        this.scores = ScoreUtils.loadPlayerScores(); // Charge les scores depuis le fichier
+        this.font = new BitmapFont();
+        this.batch = new SpriteBatch();
     }
 
-    @Override
-    public void show() {
-        // Gestion de l'affichage de l'écran de classement
-        // Appelez cette méthode lorsque le bouton "Classements" est cliqué
-        Gdx.input.setInputProcessor(stage);
-    }
-
-    @Override
-    public void render(float delta) {
-        // Affichage de l'écran de classement
+    public void render(float deltaTime) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
-        stage.draw();
+
+        batch.begin();
+        int y = Gdx.graphics.getHeight() - 50;
+        for (PlayerScore score : scores) {
+            String text = "Pseudo: " + score.getPseudo() + ", Distance: " + String.format("%.2f", score.getDistance()) + " m, Argent: " + score.getMoney() + " pièces";
+            layout.setText(font, text); // Calcule la largeur du texte
+            float x = (Gdx.graphics.getWidth() - layout.width) / 2; // Calcule la position x pour centrer le texte
+            font.draw(batch, text, x, y);
+            y -= 30; // Décale chaque ligne vers le bas
+        }
+        batch.end();
     }
 
-    @Override
-    public void resize(int width, int height) {
-        // Redimensionnez l'écran de classement si nécessaire
-        stage.getViewport().update(width, height, true);
-    }
-
-    @Override
-    public void pause() {
-    }
-
-    @Override
-    public void resume() {
-    }
-
-    @Override
-    public void hide() {
-    }
-
-    @Override
     public void dispose() {
-        // Nettoyez les ressources de l'écran de classement
-        stage.dispose();
-    }
-    public Stage getStage() {
-        return stage;
+        font.dispose();
+        batch.dispose();
     }
 }
 
