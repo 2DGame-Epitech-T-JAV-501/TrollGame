@@ -100,35 +100,41 @@ public class LeaderboardScreen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         if (game.getCurrentState() == JumpGame.GameState.LEADERBOARD) {
-            Gdx.input.setInputProcessor(stage); // Définissez le processeur d'entrée pour le stage
+            Gdx.input.setInputProcessor(stage);
         }
 
         batch.begin();
 
-        // Déterminez la plage des scores à afficher
+        // Calcul de l'index de départ et de fin pour l'affichage des scores
         int start = currentPage * SCORES_PER_PAGE;
         int end = Math.min((currentPage + 1) * SCORES_PER_PAGE, scores.size());
 
-        // Déterminez la position de départ pour l'affichage des scores
+        // Log pour déboguer la plage des scores affichés
+        Gdx.app.log("LeaderboardScreen", "Affichage des scores, page: " + currentPage + ", plage: " + start + " à " + end);
+
+        // Position de départ pour l'affichage des scores
         int y = Gdx.graphics.getHeight() - 50; // Ajustez cette valeur selon votre interface
 
         for (int i = start; i < end; i++) {
             PlayerScore score = scores.get(i);
-            // Ajoutez 1 car les indices de liste commencent à 0
-            int rank = i + 1;
+            int rank = i + 1; // Ajoute 1 car les indices de liste commencent à 0
             String text = rank + ". Pseudo: " + score.getPseudo() + ", Distance: " + String.format("%.2f", score.getDistance()) + " m, Argent: " + score.getMoney() + " pièces";
-            layout.setText(font, text); // Calcule la largeur du texte
+            layout.setText(font, text);
             float x = (Gdx.graphics.getWidth() - layout.width) / 2; // Calcule la position x pour centrer le texte
             font.draw(batch, text, x, y);
             y -= 30; // Décale chaque ligne vers le bas pour le prochain score
+
+            // Log pour chaque score affiché
+            Gdx.app.log("LeaderboardScreen", "Score " + rank + ": " + text);
         }
 
         batch.end();
 
-        // Gestion et dessin du stage (pour les boutons)
         stage.act(deltaTime);
         stage.draw();
     }
+
+
 
     private Comparator<PlayerScore> scoreComparator = new Comparator<PlayerScore>() {
         @Override
@@ -145,7 +151,12 @@ public class LeaderboardScreen {
     };
     private void loadAndSortScores() {
         this.scores = ScoreUtils.loadPlayerScores(); // Recharge les scores
-        Collections.sort(this.scores, scoreComparator); // Tri des scores
+        if (scores == null || scores.isEmpty()) {
+            Gdx.app.log("LeaderboardScreen", "Aucun score chargé ou liste des scores vide");
+        } else {
+            Gdx.app.log("LeaderboardScreen", "Nombre total de scores chargés: " + scores.size());
+            Collections.sort(this.scores, scoreComparator); // Tri des scores
+        }
     }
 
     public void dispose() {

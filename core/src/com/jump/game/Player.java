@@ -42,7 +42,7 @@ public class Player {
         texture6 = new Texture("1_terrorist_1_Run_005.png");
         x = 800;
         y = 200;
-        width = 120;
+        width = 110;
         height = 160;
         money = 0;
     }
