@@ -113,6 +113,7 @@ public class JumpGame extends ApplicationAdapter {
 		});
 		stage.addActor(playButton);
 
+
 		// Nouveau Bouton Classement
 		TextButton leaderboardButton = new TextButton("Classement", new Skin(Gdx.files.internal("uiskin.json")));
 		leaderboardButton.setSize(200, 50);
@@ -126,6 +127,20 @@ public class JumpGame extends ApplicationAdapter {
 			}
 		});
 		stage.addActor(leaderboardButton);
+
+		// Nouveau bouton Quitter
+		TextButton quitButton = new TextButton("Quitter", new Skin(Gdx.files.internal("uiskin.json")));
+		quitButton.setSize(200, 50);
+		float xQuit = (Gdx.graphics.getWidth() - quitButton.getWidth()) / 2;
+		float yQuit = yLeaderboard - 70; // Positionné en dessous du bouton Classement
+		quitButton.setPosition(xQuit, yQuit);
+		quitButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				Gdx.app.exit(); // Quitte l'application
+			}
+		});
+		stage.addActor(quitButton);
 	}
 
 
