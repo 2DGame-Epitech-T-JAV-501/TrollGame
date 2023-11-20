@@ -13,6 +13,11 @@ JumpGame est un jeu de plateforme captivant développé avec LibGDX. Les joueurs
 - Java Development Kit (JDK) - Version 8 ou supérieure.
 - Android SDK pour le déploiement sur Android (facultatif).
 - IDE supportant les projets Gradle (IntelliJ IDEA, Eclipse, Android Studio).
+  
+- ## Comment Jouer
+- Utilisez la touche **Espace** pour faire sauter le personnage.
+- Évitez les ennemis et collectez les objets pour augmenter votre score.
+- Essayez d'atteindre le score le plus élevé et comparez votre performance dans le système de classement.
 
 ## Installation
 1. Clonez le dépôt :
@@ -25,15 +30,6 @@ Pour exécuter JumpGame :
 1. Depuis l'IDE, accédez au dossier racine du projet.
 2. Exécutez la tâche Gradle `run` pour la plateforme de votre choix (desktop, android, ios).
 3. Le jeu se lancera et vous pourrez commencer à jouer.
-
-## Contribution
-Les contributions sont les bienvenues. Si vous souhaitez contribuer :
-1. Fork le projet.
-2. Créez une nouvelle branche (`git checkout -b feature/nouvelle-fonctionnalité`).
-3. Apportez vos modifications.
-4. Commit (`git commit -m 'Ajout d'une nouvelle fonctionnalité'`).
-5. Push sur la branche (`git push origin feature/nouvelle-fonctionnalité`).
-6. Ouvrez une Pull Request.
 
 ## Licence
 Ce projet est sous licence MIT. Voir [LICENSE](LICENSE.md) pour plus de détails.
