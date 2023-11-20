@@ -95,6 +95,7 @@ public class LeaderboardScreen {
     }
 
     public void render(float deltaTime) {
+        loadAndSortScores();
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -140,6 +141,10 @@ public class LeaderboardScreen {
             return Integer.compare(score2.getMoney(), score1.getMoney());
         }
     };
+    private void loadAndSortScores() {
+        this.scores = ScoreUtils.loadPlayerScores(); // Recharge les scores
+        Collections.sort(this.scores, scoreComparator); // Tri des scores
+    }
 
     public void dispose() {
         font.dispose();
