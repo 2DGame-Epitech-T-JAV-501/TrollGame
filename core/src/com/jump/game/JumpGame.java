@@ -293,9 +293,10 @@ public class JumpGame extends ApplicationAdapter {
 		collectibles.clear();
 		dernierCollectibleGenere = 0.0f;
 		gameOver = false;
-		gameOverMusic.stop();
-		backgroundMusic.play();
+		playerWon = false; // Assurez-vous de réinitialiser cette variable également
 		collectedItems = 0;
+		backgroundMusic.play(); // Redémarrer la musique, si nécessaire
+		gameOverMusic.stop(); // Arrêter la musique de game over, si elle joue
 
 	}
 
