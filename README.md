@@ -14,7 +14,7 @@ JumpGame est un jeu de plateforme captivant développé avec LibGDX. Les joueurs
 - Android SDK pour le déploiement sur Android (facultatif).
 - IDE supportant les projets Gradle (IntelliJ IDEA, Eclipse, Android Studio).
   
-- ## Comment Jouer
+## Comment Jouer
 - Utilisez la touche **Espace** pour faire sauter le personnage.
 - Évitez les ennemis et collectez les objets pour augmenter votre score.
 - Essayez d'atteindre le score le plus élevé et comparez votre performance dans le système de classement.
