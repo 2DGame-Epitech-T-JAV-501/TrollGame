@@ -12,6 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class LeaderboardScreen {
@@ -22,15 +24,60 @@ public class LeaderboardScreen {
     private Stage stage;
     private Skin skin;
     private JumpGame game;
+    private int currentPage = 0;
+    private static final int SCORES_PER_PAGE = 30;
 
     public LeaderboardScreen(JumpGame game) {
+        this.game = game;
         this.scores = ScoreUtils.loadPlayerScores(); // Charge les scores depuis le fichier
+        Collections.sort(this.scores, scoreComparator); // Tri des scores en utilisant Collections.sort
         this.font = new BitmapFont();
         this.batch = new SpriteBatch();
         stage = new Stage();
         skin = new Skin(Gdx.files.internal("uiskin.json")); // Assurez-vous d'avoir un skin
         createBackButton();
-        this.game = game;
+        createPaginationButtons();
+    }
+    private void createPaginationButtons() {
+        TextButton nextButton = new TextButton("Suivant", skin);
+        nextButton.setSize(200, 50);
+        nextButton.setPosition(Gdx.graphics.getWidth() - 800, 50); // Position ajustée
+        nextButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if ((currentPage + 1) * SCORES_PER_PAGE < scores.size()) {
+                    currentPage++;
+                    updateDisplayedScores();
+                }
+            }
+        });
+
+        TextButton prevButton = new TextButton("Precedent", skin);
+        prevButton.setSize(200, 50);
+        prevButton.setPosition(600, 50); // Position ajustée
+        prevButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (currentPage > 0) {
+                    currentPage--;
+                    updateDisplayedScores();
+                }
+            }
+        });
+
+        stage.addActor(nextButton);
+        stage.addActor(prevButton);
+    }
+
+    private void updateDisplayedScores() {
+        // Effacez les scores actuellement affichés
+        // Affichez les scores pour la currentPage
+        int start = currentPage * SCORES_PER_PAGE;
+        int end = Math.min((currentPage + 1) * SCORES_PER_PAGE, scores.size());
+        for (int i = start; i < end; i++) {
+            PlayerScore score = scores.get(i);
+            // Affichez le score (par exemple, sous forme de texte)
+        }
     }
     private void createBackButton() {
         TextButton backButton = new TextButton("Retour", skin);
@@ -48,26 +95,51 @@ public class LeaderboardScreen {
     }
 
     public void render(float deltaTime) {
-        if (game.getCurrentState() == JumpGame.GameState.LEADERBOARD) {
-            Gdx.input.setInputProcessor(stage); // Définissez le processeur d'entrée
-        }
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        if (game.getCurrentState() == JumpGame.GameState.LEADERBOARD) {
+            Gdx.input.setInputProcessor(stage); // Définissez le processeur d'entrée pour le stage
+        }
+
         batch.begin();
-        int y = Gdx.graphics.getHeight() - 50;
-        for (PlayerScore score : scores) {
+
+        // Déterminez la plage des scores à afficher
+        int start = currentPage * SCORES_PER_PAGE;
+        int end = Math.min((currentPage + 1) * SCORES_PER_PAGE, scores.size());
+
+        // Déterminez la position de départ pour l'affichage des scores
+        int y = Gdx.graphics.getHeight() - 50; // Ajustez cette valeur selon votre interface
+
+        for (int i = start; i < end; i++) {
+            PlayerScore score = scores.get(i);
             String text = "Pseudo: " + score.getPseudo() + ", Distance: " + String.format("%.2f", score.getDistance()) + " m, Argent: " + score.getMoney() + " pièces";
             layout.setText(font, text); // Calcule la largeur du texte
             float x = (Gdx.graphics.getWidth() - layout.width) / 2; // Calcule la position x pour centrer le texte
             font.draw(batch, text, x, y);
-            y -= 30; // Décale chaque ligne vers le bas
+            y -= 30; // Décale chaque ligne vers le bas pour le prochain score
         }
-        stage.act();
-        stage.draw();
 
         batch.end();
+
+        // Gestion et dessin du stage (pour les boutons)
+        stage.act(deltaTime);
+        stage.draw();
     }
+
+    private Comparator<PlayerScore> scoreComparator = new Comparator<PlayerScore>() {
+        @Override
+        public int compare(PlayerScore score1, PlayerScore score2) {
+            // Comparaison primaire par distance
+            int distanceCompare = Float.compare(score2.getDistance(), score1.getDistance());
+            if (distanceCompare != 0) {
+                return distanceCompare;
+            }
+
+            // Comparaison secondaire par argent
+            return Integer.compare(score2.getMoney(), score1.getMoney());
+        }
+    };
 
     public void dispose() {
         font.dispose();
