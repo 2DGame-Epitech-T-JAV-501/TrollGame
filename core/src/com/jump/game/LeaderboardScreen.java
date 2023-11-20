@@ -114,7 +114,9 @@ public class LeaderboardScreen {
 
         for (int i = start; i < end; i++) {
             PlayerScore score = scores.get(i);
-            String text = "Pseudo: " + score.getPseudo() + ", Distance: " + String.format("%.2f", score.getDistance()) + " m, Argent: " + score.getMoney() + " pièces";
+            // Ajoutez 1 car les indices de liste commencent à 0
+            int rank = i + 1;
+            String text = rank + ". Pseudo: " + score.getPseudo() + ", Distance: " + String.format("%.2f", score.getDistance()) + " m, Argent: " + score.getMoney() + " pièces";
             layout.setText(font, text); // Calcule la largeur du texte
             float x = (Gdx.graphics.getWidth() - layout.width) / 2; // Calcule la position x pour centrer le texte
             font.draw(batch, text, x, y);
