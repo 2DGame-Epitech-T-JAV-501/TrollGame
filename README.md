@@ -1,7 +1,7 @@
 # JumpGame
 
 ## Description
-JumpGame est un jeu de plateforme captivant développé avec LibGDX. Les joueurs contrôlent un personnage sautant à travers divers niveaux, en évitant les ennemis et en collectant des objets pour augmenter leur score. Le jeu intègre un système de classement permettant aux joueurs de comparer leurs performances.
+JumpGame est un jeu de plateforme captivant développé avec LibGDX. Les joueurs contrôlent un personnage sautant à travers divers niveaux, en collectant des objets et en parcourant la plus longue distance pour augmenter leur score. Le jeu intègre un système de classement permettant aux joueurs de comparer leurs performances.
 
 ## Fonctionnalités
 - Gameplay interactif et engageant.
@@ -16,7 +16,7 @@ JumpGame est un jeu de plateforme captivant développé avec LibGDX. Les joueurs
   
 ## Comment Jouer
 - Utilisez la touche `Espace` pour faire sauter le personnage.
-- Évitez les ennemis et collectez les objets pour augmenter votre score.
+- Collectez les objets et parcourez la plus longue distance pour augmenter votre score.
 - Essayez d'atteindre le score le plus élevé et comparez votre performance dans le système de classement.
 
 ## Installation
