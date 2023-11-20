@@ -151,23 +151,6 @@ public class JumpGame extends ApplicationAdapter {
 		return false;
 	}
 
-	private void createLeaderboardScreen() {
-		// Créez le bouton "Retour au Menu"
-		TextButton backButton = new TextButton("Retour au Menu", new Skin(Gdx.files.internal("uiskin.json")));
-		backButton.setSize(200, 50);
-		float xBack = (Gdx.graphics.getWidth() - backButton.getWidth()) / 2;
-		float yBack = 50; // Positionnez le bouton en haut de l'écran
-		backButton.setPosition(xBack, yBack);
-		backButton.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				currentState = GameState.MENU; // Revenir à l'écran de menu
-			}
-		});
-		stage.addActor(backButton);
-	}
-
-
 	@Override
 	public void render() {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -195,8 +178,7 @@ public class JumpGame extends ApplicationAdapter {
 
 			case LEADERBOARD:
 				if (leaderboardScreen == null) {
-					leaderboardScreen = new LeaderboardScreen();
-					createLeaderboardScreen();
+					leaderboardScreen = new LeaderboardScreen(this);
 				}
 				leaderboardScreen.render(Gdx.graphics.getDeltaTime());
 				break;
@@ -326,5 +308,20 @@ public class JumpGame extends ApplicationAdapter {
 		font.dispose();
 		backgroundMusic.dispose();
 		shootSound.dispose();
+	}
+	public void changeState(GameState newState) {
+		clearStage(); // Nettoyez le stage avant de changer d'état
+		this.currentState = newState;
+
+		if (newState == GameState.MENU) {
+			Gdx.input.setInputProcessor(stage); // Rétablissez le processeur d'entrée
+			createMenu(); // Recréez les boutons du menu
+		}
+	}
+	private void clearStage() {
+		stage.clear();
+	}
+	public GameState getCurrentState() {
+		return this.currentState;
 	}
 }
