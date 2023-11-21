@@ -21,7 +21,7 @@ JumpGame est un jeu de plateforme captivant développé avec LibGDX. Les joueurs
 
 ## Installation
 1. Clonez le dépôt :
-git clone https://github.com/votre-username/JumpGame.git
+git clone `https://github.com/votre-username/JumpGame.git`
 2. Ouvrez le projet dans votre IDE.
 3. Configurez le JDK et, si nécessaire, l'Android SDK.
 
